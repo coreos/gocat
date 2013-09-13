@@ -1,4 +1,4 @@
-# gosocat
+# gocat
 
 Socket activated transparent SSL proxy written in Go.
 The goal is to make it easy to write a simple unit file that exposes a Unix socket to the internet securely
@@ -21,7 +21,7 @@ Description=Proxy Cool Service to the Internet
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/gosocat -key <path to key> -cert <path to cert pem> /var/run/cool-service/service.socket
+ExecStart=/usr/bin/gocat -key <path to key> -cert <path to cert pem> /var/run/cool-service/service.socket
 ```
 
 ## Goals

@@ -1,0 +1,5 @@
+[Unit]
+Description=Socket for Go HTTP Server Example
+
+[Socket]
+ListenStream=8080
