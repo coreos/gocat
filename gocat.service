@@ -1,0 +1,6 @@
+[Unit]
+Description=Socket Activated Go HTTP Server Example
+
+[Service]
+# To run directly
+ExecStart=/vagrant/gocat/gocat /tmp/testsock :8080
