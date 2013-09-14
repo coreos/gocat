@@ -7,8 +7,7 @@ import (
 	"io"
 	"net"
 	"os"
-	"strconv"
-	"syscall"
+	"github.com/coreos/go-systemd/activation"
 )
 
 //TODO: review error handling
@@ -43,7 +42,7 @@ func main() {
 func gocat(socket, server, cert, key string) {
 	var ln net.Listener
 	var err error
-	if activatedFds := listenFds(); len(activatedFds) == 0 {
+	if activatedFds := activation.Files(); len(activatedFds) == 0 {
 		ln, err = net.Listen("tcp", server)
 		if err != nil {
 			panic(err)
@@ -105,24 +104,3 @@ func wrapTLS(listener net.Listener, certFile, keyFile string) net.Listener {
 	return tls.NewListener(listener, cfg)
 }
 
-// based on: https://gist.github.com/alberts/4640792
-const (
-	listenFdsStart = 3
-)
-
-func listenFds() []*os.File {
-	pid, err := strconv.Atoi(os.Getenv("LISTEN_PID"))
-	if err != nil || pid != os.Getpid() {
-		return nil
-	}
-	nfds, err := strconv.Atoi(os.Getenv("LISTEN_FDS"))
-	if err != nil || nfds == 0 {
-		return nil
-	}
-	files := []*os.File(nil)
-	for fd := listenFdsStart; fd < listenFdsStart+nfds; fd++ {
-		syscall.CloseOnExec(fd)
-		files = append(files, os.NewFile(uintptr(fd), ""))
-	}
-	return files
-}
